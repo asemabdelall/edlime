@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Define custom color variables for light and dark themes */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -14,8 +15,50 @@
   }
 }
 
+/* Apply the custom colors and font globally */
 body {
+  background-color: var(--background);
   color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Utility Classes for Background and Text Colors */
+.bg-background {
+  background-color: var(--background);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+/* Wave Animation */
+
+/* Wave keyframe */
+@keyframes wave {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+/* Wave Animation Classes */
+
+/* Slow wave animation */
+.animate-waveSlow {
+  animation: wave 60s infinite linear;
+}
+
+/* Medium speed wave animation */
+.animate-waveMedium {
+  animation: wave 45s infinite linear;
+}
+
+/* Fast wave animation */
+.animate-waveFast {
+  animation: wave 30s infinite linear;
 }
