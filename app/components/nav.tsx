@@ -17,10 +17,10 @@ export default function Nav() {
   return !loggedin && (
     <header className="fixed top-0 left-0 w-full bg-gray-900 z-50">
       <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
-        <a className="block text-teal-600 dark:text-teal-300" href="#">
+        <Link className="block text-teal-600 dark:text-teal-300" href="/">
           <span className="sr-only">Home</span>
           <Image alt="logo" src={"/logo.png"} width={100} height={100} className="p-2" />
-        </a>
+        </Link>
 
         <div className="flex flex-1 items-center justify-end md:justify-between">
           <nav aria-label="Global" className="hidden md:block">

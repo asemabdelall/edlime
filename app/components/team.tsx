@@ -139,7 +139,7 @@ export default function Team() {
               </svg>
             </div>
 
-            <p className="mt-0.5 text-3xl font-medium">ادم</p>
+            <p className="mt-0.5 text-3xl font-medium">ادم لمكرطة</p>
             <p className="mt-0.5 text-md m-auto font-medium text-gray-50">FULL-STACK DEVELOPER</p>
           </div>
         </div>
@@ -206,7 +206,7 @@ export default function Team() {
               </svg>
             </div>
 
-            <p className="mt-0.5 text-3xl font-medium">يوسف</p>
+            <p className="mt-0.5 text-3xl font-medium">محمد فتح الدين</p>
             <p className="mt-0.5 text-md m-auto font-medium text-gray-50">FULL-STACK DEVELOPER</p>
           </div>
         </div>
