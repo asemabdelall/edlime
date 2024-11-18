@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import Middle from "@/app/components/middle";
