@@ -52,7 +52,7 @@ export default function Dashboard() {
         <div className="mx-auto max-w-screen-xl">
           <br />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {subjects.map((subject, index) => (
+          {subjects.map((subject) => (
             <Link href={`/subject/${subject.$id}`} key={subject.$id}>
               <div
                 className="e-card playing relative w-[100%] h-[230px] m-auto mt-[10px] rounded-2xl overflow-hidden shadow-xl bg-transparent animate-fadeIn"
