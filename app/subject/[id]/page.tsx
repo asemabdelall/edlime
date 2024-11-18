@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Footer from "@/app/components/dashboard/dashboardfooter";
 import { Client, Databases } from "appwrite";
+import Link from "next/link";
+import Timer from "@/app/components/timer";
 
 export default function SubjectDetail() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function SubjectDetail() {
   const [subjectData, setSubjectData] = useState<any>(null);
   const [messages, setMessages] = useState<{ user: string; ai: string }[]>([]);
   const [input, setInput] = useState<string>("");
+  const [promptData, setPromptData] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("المعلم الذكي");
 
   // Initialize Appwrite Client
@@ -46,6 +48,23 @@ export default function SubjectDetail() {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (subjectData?.file_path) {
+      const fetchPromptData = async () => {
+        try {
+          const response = await fetch(subjectData.file_path); // Dynamically use the file path from subject data
+          const text = await response.text();
+          setPromptData(text);
+        } catch (error) {
+          console.error("Failed to fetch prompt data:", error);
+          setPromptData("No additional context available.");
+        }
+      };
+
+      fetchPromptData();
+    }
+  }, [subjectData]);
+
   const handleSendMessage = async () => {
     if (!input.trim()) return;
     const userMessage = input.trim();
@@ -54,35 +73,37 @@ export default function SubjectDetail() {
     setInput("");
 
     try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4",
-          messages: [
-            {
-              role: "system",
-              content:
-                `اسمك هو المعلم الذكي. يجب أن تجيب دائمًا باسم المعلم الذكي، وتستخدم المعلومات فقط من المنهج الكويتي ${subjectData?.subject_name}.`,
-            },
-            {
-              role: "user",
-              content: userMessage,
-            },
-          ],
-          max_tokens: 150,
-        }),
-      });      
+      const response = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gemini-1.5-flash",
+            messages: [
+              {
+                role: "system",
+                content: `اسمك هو المعلم الذكي. يجب أن تجيب دائمًا باسم المعلم الذكي، وتستخدم المعلومات فقط من المنهج الكويتي ${subjectData?.subject_name}. السياق الإضافي: ${promptData}`,
+              },
+              {
+                role: "user",
+                content: userMessage,
+              },
+            ],
+            max_tokens: 150,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       setMessages((prev) => {
         const updatedMessages = [...prev];
         updatedMessages[updatedMessages.length - 1].ai =
-          data.choices?.[0]?.message?.content?.trim() || "No response";
+          data.choices[0]?.message?.content?.trim() || "No response";
         return updatedMessages;
       });
     } catch (error) {
@@ -142,6 +163,16 @@ export default function SubjectDetail() {
             >
               الموارد التعليمية
             </button>
+            <button
+              className={`px-4 py-2 rounded-md ${
+                activeTab === "المؤقت الدراسي"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-700 text-gray-300"
+              }`}
+              onClick={() => setActiveTab("المؤقت الدراسي")}
+            >
+              المؤقت الدراسي
+            </button>
           </div>
 
           {/* Tabs Content */}
@@ -150,29 +181,79 @@ export default function SubjectDetail() {
               <div className="flex flex-col h-full">
                 {/* Chatbox */}
                 <div className="flex-grow overflow-y-auto bg-gray-700 p-4 rounded-md space-y-4">
-                  {messages.map((msg, idx) => (
-                    <div key={idx} className="space-y-2">
-                      {/* User Message */}
-                      <div className="text-right">
-                        <p className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg max-w-full break-words">
-                          {msg.user}
-                        </p>
-                      </div>
-                      {/* AI Message */}
-                      <div className="text-left">
-                        <p className="inline-block bg-gray-600 text-white px-4 py-2 rounded-lg max-w-full break-words">
-                          {msg.ai}
-                        </p>
-                      </div>
+                  {messages.length === 0 ? (
+                    <div className="text-center text-gray-400">
+                      <p>لا توجد رسائل بعد. ابدأ بكتابة رسالتك أدناه.</p>
                     </div>
-                  ))}
+                  ) : (
+                    messages.map((msg, idx) => (
+                      <div key={idx} className="space-y-2">
+                        {/* User Message */}
+                        <div className="text-right">
+                          <p className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg max-w-full break-words">
+                            {msg.user}
+                          </p>
+                        </div>
+                        {/* AI Message */}
+                        {msg.ai && (
+                          <div className="text-left">
+                            <p className="inline-block bg-gray-600 text-white px-4 py-2 rounded-lg max-w-full break-words">
+                              {msg.ai}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
             {activeTab === "الموارد التعليمية" && (
               <div>
                 <h2 className="text-xl font-bold mb-4">الموارد التعليمية</h2>
-                <p>هنا ستجد موارد تعليمية مفيدة لدعم تعلمك.</p>
+                <div className="grid-container relative h-[400px] overflow-auto">
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    {subjectData?.book_url && (
+      <Link href={subjectData.book_url} target="_blank">
+        <div className="e-card playing relative w-[100%] h-[230px] m-auto mt-[10px] rounded-2xl overflow-hidden shadow-xl bg-transparent animate-fadeIn">
+          <div className="wave absolute w-[540px] h-[700px] opacity-60 left-0 top-0 -ml-[50%] -mt-[70%] bg-gradient-to-r from-[#af40ff] via-[#5b42f3] to-[#00ddeb] rounded-[40%] animate-waveSlow"></div>
+          <div className="infotop flex flex-col items-center justify-center text-center text-white font-semibold text-xl absolute inset-0">
+            <Image src={"/icons/books.png"} alt="" width={100} height={100} />
+            <p className="mt-4">الكتاب المدرسي</p>
+          </div>
+        </div>
+      </Link>
+    )}
+    {subjectData?.external_book_url && (
+      <Link href={subjectData.external_book_url} target="_blank">
+        <div className="e-card playing relative w-[100%] h-[230px] m-auto mt-[10px] rounded-2xl overflow-hidden shadow-xl bg-transparent animate-fadeIn">
+          <div className="wave absolute w-[540px] h-[700px] opacity-60 left-0 top-0 -ml-[50%] -mt-[70%] bg-gradient-to-r from-[#af40ff] via-[#5b42f3] to-[#00ddeb] rounded-[40%] animate-waveSlow"></div>
+          <div className="infotop flex flex-col items-center justify-center text-center text-white font-semibold text-xl absolute inset-0">
+            <Image src={"/icons/file.png"} alt="" width={100} height={100} />
+            <p className="mt-4">المذكرة الشاملة</p>
+          </div>
+        </div>
+      </Link>
+    )}
+    {subjectData?.test_url && (
+      <Link href={subjectData.test_url} target="_blank">
+        <div className="e-card playing relative w-[100%] h-[230px] m-auto mt-[10px] rounded-2xl overflow-hidden shadow-xl bg-transparent animate-fadeIn">
+          <div className="wave absolute w-[540px] h-[700px] opacity-60 left-0 top-0 -ml-[50%] -mt-[70%] bg-gradient-to-r from-[#af40ff] via-[#5b42f3] to-[#00ddeb] rounded-[40%] animate-waveSlow"></div>
+          <div className="infotop flex flex-col items-center justify-center text-center text-white font-semibold text-xl absolute inset-0">
+            <Image src={"/icons/file.png"} alt="" width={100} height={100} />
+            <p className="mt-4">نموذج اختبار</p>
+          </div>
+        </div>
+      </Link>
+    )}
+  </div>
+</div>
+
+                </div>
+            )}
+            {activeTab === "المؤقت الدراسي" && (
+              <div>
+                <Timer />
               </div>
             )}
           </div>

@@ -47,6 +47,7 @@ export default function Dashboard() {
   return (
     <div className="bg-gray-900 p-5 text-white">
       <h1 className="mt-[70px] text-2xl text-right">مرحبا, {user?.firstName}</h1>
+      <h1 className="mt-[10px] text-2xl text-right">الصف {grade}</h1>
       <section className="bg-gray-900 text-white">
         <div className="mx-auto max-w-screen-xl">
           <br />
@@ -89,8 +90,8 @@ export default function Dashboard() {
               >
                 <option value="">اختر الصف</option>
                 <option value="10">الصف العاشر</option>
-                <option value="11">الصف الحادي عشر</option>
-                <option value="12">الصف الثاني عشر</option>
+                <option value="11" disabled>(قريبا) الصف الحادي عشر</option>
+                <option value="12" disabled>(قريبا) الصف الثاني عشر</option>
               </select>
               <button
                 type="submit"
