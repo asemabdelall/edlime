@@ -42,7 +42,7 @@ export default function Middle() {
               {/* Centered Image and Text */}
               <div className="infotop flex flex-col items-center justify-center text-center text-white font-semibold text-xl absolute inset-0">
                 <Image src="/icons/videos.png" width={150} height={150} alt="Books icon" />
-                <p className="mt-4">فيديوهات تعليمية</p>
+                <p className="mt-4">المؤقت الدراسي</p>
               </div>
             </div>
           <div className="e-card playing relative w-[100%] h-[300px] m-auto mt-[30px] rounded-2xl overflow-hidden shadow-xl bg-transparent animate-fadeIn">
