@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -27,16 +28,16 @@ export default function Header() {
               </h1>
 
               <p className="mx-auto mt-4 max-w-xl sm:text-xl/relaxed lg:mx-0">
-                منصة تعليمية شاملة مخصصة لمنهج الكويت المرجلة الثانوية
+                منصة تعليمية شاملة مخصصة لمنهج الكويت للمرحلة الثانوية
               </p>
 
               <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
-                <a
+                <Link
                   className="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
-                  href="#"
+                  href="/sign-in"
                 >
                   ابدأ الان
-                </a>
+                </Link>
 
                 <a
                   className="block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
