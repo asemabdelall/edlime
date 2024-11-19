@@ -55,7 +55,7 @@ export default function Middle() {
               {/* Centered Image and Text */}
               <div className="infotop flex flex-col items-center justify-center text-center text-white font-semibold text-xl absolute inset-0">
                 <Image src="/icons/teacher.png" width={150} height={150} alt="Books icon" />
-                <p className="mt-4">طلب معلم</p>
+                <p className="mt-4">دعم الذكاء الاصطناعي</p>
               </div>
             </div>
       </div>
