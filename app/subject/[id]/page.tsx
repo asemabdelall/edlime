@@ -7,7 +7,6 @@ import Link from "next/link";
 import Timer from "@/app/components/timer";
 
 export default function SubjectDetail() {
-  const router = useRouter();
   const [id, setId] = useState<string | null>(null);
   const [subjectData, setSubjectData] = useState<any>(null);
   const [messages, setMessages] = useState<{ user: string; ai: string }[]>([]);
@@ -82,7 +81,7 @@ export default function SubjectDetail() {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`,
           },
           body: JSON.stringify({
-            model: "gemini-1.5-flash",
+            model: "gemini-1.5-flash-8b",
             messages: [
               {
                 role: "system",
@@ -93,7 +92,7 @@ export default function SubjectDetail() {
                 content: userMessage,
               },
             ],
-            max_tokens: 150,
+            max_tokens: 300,
           }),
         }
       );
@@ -194,14 +193,19 @@ export default function SubjectDetail() {
                             {msg.user}
                           </p>
                         </div>
-                        {/* AI Message */}
-                        {msg.ai && (
-                          <div className="text-left">
-                            <p className="inline-block bg-gray-600 text-white px-4 py-2 rounded-lg max-w-full break-words">
-                              {msg.ai}
-                            </p>
-                          </div>
-                        )}
+                          {/* AI Message */}
+                          {msg.ai && (
+                            <div className="text-left">
+                              <div
+                                className="bg-gray-600 text-white px-4 py-2 rounded-lg max-w-full break-words space-y-4"
+                                dangerouslySetInnerHTML={{
+                                  __html: msg.ai,
+                                }}
+                              ></div>
+                            </div>
+                          )}
+
+
                       </div>
                     ))
                   )}
